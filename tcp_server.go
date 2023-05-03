@@ -8,6 +8,7 @@ import (
 	"temp/conv"
 	"strings"
 	"strconv"
+	"temp/is105sem03"
 )
 
 func main() {
@@ -43,12 +44,18 @@ func main() {
 						}
 						return // fra for løkke
 					}
-					switch msg := string(buf[:n]); msg {
+
+                                        alfLength := len(is105sem03.ALF_SEM03)
+					fraAlice := string(buf[:n])
+                                        dekryptertRune := is105sem03.Krypter([]rune(fraAlice), is105sem03.ALF_SEM03, alfLength-4)
+                                        dekryptertString := string(dekryptertRune)
+
+					switch msg := dekryptertString; msg {
 
   				        case "ping":
 						_, err = c.Write([]byte("pong"))
 
-					case "Kjevik;SN39040;18.03.2022 01:50;6":
+					case dekryptertString:
 
 						a1 := strings.Split((msg), ";")
 
@@ -65,7 +72,7 @@ func main() {
 						}
 
 					default:
-						_, err = c.Write(buf[:n])
+						_, err = c.Write([]byte("FEIL"))
 					}
 					if err != nil {
 						if err != io.EOF {
